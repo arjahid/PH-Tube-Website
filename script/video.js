@@ -7,6 +7,12 @@ const getTimeString = (time) => {
   let remainHour = hour % 24;
   return `${day} day ${remainHour} hour ${minute} minute ${remainSecond} second ago`;
 };
+const  removeActiveClass=()=>{
+const button=document.getElementsByClassName("cat-btn");
+ for(let btn of button){
+    btn.classList.remove("active");
+ }
+}
 const loadCatagories = () => {
   const res = fetch(
     "https://openapi.programming-hero.com/api/phero-tube/categories"
@@ -31,8 +37,14 @@ const loadCategoresVideos=(id)=>{
     // alert(id);
     const res=fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then(res => res.json())
-    // .then(data=>console.log(data))
-    .then(data=>displayVideos(data.category) )
+     
+    .then(data=>{
+        removeActiveClass();
+        const activeBtn=document.getElementById(`btn-${id}`)
+        
+        activeBtn.classList.add("active");
+        displayVideos(data.category)
+    } )
     .catch((err)=>{
         console.log("error occured here",err)
     })
@@ -100,7 +112,7 @@ const display = (catagoriesOfData) => {
   for (const data of catagoriesOfData) {
     const buttonContainer = document.createElement("div");
     buttonContainer.innerHTML = `
-    <button onclick="loadCategoresVideos(${data.category_id})" class="btn">${data.category}</button>`;
+    <button id="btn-${data.category_id}" onclick="loadCategoresVideos(${data.category_id})" class="btn cat-btn">${data.category}</button>`;
     category.appendChild(buttonContainer);
   }
 };
