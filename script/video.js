@@ -3,7 +3,9 @@ const getTimeString=(time)=>{
     let remainSecond=time % 3600;
     let minute=parseInt(remainSecond/60);
     remainSecond=remainSecond % 60;
-    return `${hour} hour ${minute} minute ${remainSecond} second ago`
+    let day=parseInt(hour/24);
+    let remainHour=hour % 24;
+    return `${day} day ${remainHour} hour ${minute} minute ${remainSecond} second ago`
 
 }
 const loadCatagories = () => {
