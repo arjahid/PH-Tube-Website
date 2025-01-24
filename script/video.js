@@ -1,13 +1,12 @@
-const getTimeString=(time)=>{
-    let hour=parseInt(time/3600);
-    let remainSecond=time % 3600;
-    let minute=parseInt(remainSecond/60);
-    remainSecond=remainSecond % 60;
-    let day=parseInt(hour/24);
-    let remainHour=hour % 24;
-    return `${day} day ${remainHour} hour ${minute} minute ${remainSecond} second ago`
-
-}
+const getTimeString = (time) => {
+  let hour = parseInt(time / 3600);
+  let remainSecond = time % 3600;
+  let minute = parseInt(remainSecond / 60);
+  remainSecond = remainSecond % 60;
+  let day = parseInt(hour / 24);
+  let remainHour = hour % 24;
+  return `${day} day ${remainHour} hour ${minute} minute ${remainSecond} second ago`;
+};
 const loadCatagories = () => {
   const res = fetch(
     "https://openapi.programming-hero.com/api/phero-tube/categories"
@@ -28,8 +27,22 @@ const loadVideos = () => {
       console.log("error occured here", err);
     });
 };
+const loadCategoresVideos=(id)=>{
+    // alert(id);
+    const res=fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then(res => res.json())
+    // .then(data=>console.log(data))
+    .then(data=>displayVideos(data.category) )
+    .catch((err)=>{
+        console.log("error occured here",err)
+    })
+
+
+
+}
 const displayVideos = (videos) => {
   const videoContainer = document.getElementById("videos");
+  videoContainer.innerHTML = "";
   for (const video of videos) {
     console.log(video);
     const card = document.createElement("div");
@@ -40,7 +53,13 @@ const displayVideos = (videos) => {
       src=${video.thumbnail}
       class="h-full w-full object-cover"
       alt="Shoes" />
-      ${video.others.posted_date?.length ==0 ? `` : ` <span class="absolute right-2 bottom-2 text-white bg-black rounded p-1">${getTimeString(video.others.posted_date)}</span>`}
+      ${
+        video.others.posted_date?.length == 0
+          ? ``
+          : ` <span class="absolute right-2 bottom-2 text-white bg-black rounded p-1">${getTimeString(
+              video.others.posted_date
+            )}</span>`
+      }
      
   </figure>
   <div class="px-0 py-2 flex gap-2">
@@ -68,10 +87,10 @@ const displayVideos = (videos) => {
 const display = (catagoriesOfData) => {
   const category = document.getElementById("category");
   for (const data of catagoriesOfData) {
-    const button = document.createElement("button");
-    button.classList = "btn";
-    button.innerText = data.category;
-    category.appendChild(button);
+    const buttonContainer = document.createElement("div");
+    buttonContainer.innerHTML = `
+    <button onclick="loadCategoresVideos(${data.category_id})" class="btn">${data.category}</button>`;
+    category.appendChild(buttonContainer);
   }
 };
 loadCatagories();
